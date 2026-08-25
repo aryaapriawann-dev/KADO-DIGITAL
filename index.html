@@ -55,7 +55,30 @@
         <p class="reveal-age" data-step="4">19 TAHUN</p>
         <p class="reveal-date" data-step="5">25 AGUSTUS 2007</p>
 
-        <button class="btn-main btn-next" data-step="6" id="btnToCard">LANJUT ➜</button>
+        <!-- SURAT RAHASIA dari Karasuno — reveal scrapbook -->
+        <div class="letter-teaser" data-step="6">
+          <p class="letter-hint">...ada surat buat kamu 💌</p>
+
+          <figure class="letter-card" id="letterCard">
+            <span class="tape tape-tl" aria-hidden="true"></span>
+            <span class="tape tape-tr" aria-hidden="true"></span>
+            <img
+              class="letter-img"
+              id="letterImg"
+              src="assets/images/ucapan.png"
+              alt="Kartu ucapan ulang tahun dari Tsukishima Kei untuk Puput"
+              draggable="false"
+            />
+            <figcaption class="letter-caption">
+              <span class="letter-quote">“DON'T STOP, KEEP GOING.”</span>
+              <span class="letter-sign">— TSUKISHIMA KEI · 烏野 #11</span>
+            </figcaption>
+          </figure>
+
+          <button class="btn-main btn-letter" id="btnZoomLetter">🔍 LIHAT LEBIH DEKAT</button>
+        </div>
+
+        <button class="btn-main btn-next" data-step="7" id="btnToCard">LANJUT ➜</button>
       </div>
 
       <!-- Jersey numbers dekoratif -->
@@ -93,39 +116,17 @@
 
       <!-- Overlay kemenangan saat tombol berhasil diklik -->
       <div class="win-overlay" id="winOverlay">
-        <div class="win-box" id="winBox">
+        <div class="win-box">
           <p class="win-emoji">🏐</p>
           <h3>EH... KEDAPETAN?!</h3>
           <p class="win-text">
-            Oke oke, kamu menang. Dan hadiah aslinya...<br />
-            ada surat dari seseorang buat kamu 💌
+            Oke oke, kamu menang. Hadiah aslinya:<br /><br />
+            <strong>doa terbaik dari temanmu</strong> 🤍<br /><br />
+            Semoga umur 19 ini jadi season terbaikmu.
+            Selamat ulang tahun, Puput! ❤️
           </p>
           <p class="win-attempts" id="winAttempts"></p>
-
-          <!-- Amplop → klik untuk membuka ucapan (reveal keren) -->
-          <button class="btn-main btn-open-letter" id="btnOpenLetter">
-            💌 BUKA SURATNYA
-          </button>
-        </div>
-
-        <!-- Reveal kartu ucapan Tsukishima -->
-        <div class="letter-reveal" id="letterReveal" aria-hidden="true">
-          <div class="letter-stage">
-            <span class="tape tape-tl" aria-hidden="true"></span>
-            <span class="tape tape-tr" aria-hidden="true"></span>
-            <img
-              class="letter-img"
-              id="letterImg"
-              src="ucapan.png"
-              alt="Kartu ucapan ulang tahun dari Tsukishima Kei untuk Puput"
-              draggable="false"
-            />
-            <div class="letter-caption">
-              <p class="letter-quote">“DON'T STOP, KEEP GOING.”</p>
-              <p class="letter-sign">— TSUKISHIMA KEI · 烏野 #11</p>
-            </div>
-            <button class="btn-main" id="btnRestart">ULANG DARI AWAL</button>
-          </div>
+          <button class="btn-main" id="btnRestart">ULANG DARI AWAL</button>
         </div>
       </div>
     </section>

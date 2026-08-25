@@ -284,7 +284,7 @@ function burstWinConfetti() {
 const letterLightbox = document.createElement("div");
 letterLightbox.className = "letter-lightbox";
 letterLightbox.innerHTML =
-  '<img src="ucapan.png" alt="Kartu ucapan dari Tsukishima Kei" draggable="false">' +
+  '<img src="assets/images/ucapan.png" alt="Kartu ucapan dari Tsukishima Kei" draggable="false">' +
   "<p>klik di mana saja untuk menutup</p>";
 document.body.appendChild(letterLightbox);
 
