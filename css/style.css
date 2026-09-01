@@ -38,19 +38,16 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   transform-style: preserve-3d;
 }
 
-/* ---------------- BACKGROUND IMAGE: parallax kamera ---------------- */
+/* Background image: blur statis (1x compute), tanpa animasi kenburns
+   agar tidak repaint terus + kursor kedip. */
 .bg-image {
   position: fixed;
   inset: -4%;
   z-index: 0;
-  /* PERF FIX: dulu pakai backdrop-filter blur() + animasi kenburns di belakangnya.
-     Kombinasi itu memaksa blur ulang SELURUH LAYAR tiap frame -> kursor kedip,
-     klik lemot. Sekarang: blur statis via filter (di-compute 1x), animasi dihapus. */
   background: url("../assets/images/bg.jpg") center / cover no-repeat;
   filter: blur(5px) brightness(0.55);
-  transform: translateZ(0); /* promote ke layer GPU sendiri, stabil */
+  transform: translateZ(0);
 }
-/* gradasi gelap atas & bawah (tanpa backdrop-filter = murah) */
 .bg-image::after {
   content: "";
   position: absolute;
@@ -63,7 +60,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   );
 }
 
-/* garis net tipis di tengah layar — identitas court, sangat halus */
+/* Garis net tipis + highlight horizontal — identitas court, sangat halus */
 .court-lines { position: absolute; inset: 0; overflow: hidden; }
 .court-lines::before {
   content: "";
@@ -83,7 +80,9 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
     transparent, rgba(249, 115, 22, 0.35) 50%, transparent);
 }
 
-/* ---------------- SPEED LINES ---------------- */
+/* ============================================================
+   SPEED LINES — dekorasi anime, muncul saat transisi
+   ============================================================ */
 .speed-lines { position: fixed; inset: 0; pointer-events: none; z-index: 50; opacity: 0; }
 .speed-lines.fire { animation: speedFlash 0.7s ease-out; }
 @keyframes speedFlash {
@@ -92,7 +91,9 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   100% { opacity: 0; }
 }
 
-/* ---------------- PARTICLES ---------------- */
+/* ============================================================
+   PARTICLES — debu/orange dots melayang
+   ============================================================ */
 .particles { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
 .particle {
   position: absolute;
@@ -107,7 +108,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
 /* ============================================================
    SCENES — transisi sinematik 3D (depth push)
-   Keluar: mundur ke belakang + blur. Masuk: naik dari kedalaman.
+   Keluar: mundur + blur. Masuk: naik dari kedalaman.
    ============================================================ */
 .scene {
   position: fixed;
@@ -144,7 +145,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
 /* ============================================================
    VOLLEYBALL — bola 3D sungguhan
-   Sphere shading + ring orbit di preserve-3d, rotasi axis miring
+   Sphere shading + 3 ring orbit (preserve-3d, rotasi axis miring)
    ============================================================ */
 .volleyball {
   width: 130px; height: 130px;
@@ -169,7 +170,8 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
     0 0 60px rgba(249, 115, 22, 0.18),
     inset -14px -18px 30px rgba(0, 0, 0, 0.28);
 }
-/* ring-panel bola sebagai piringan 3D yang mengorbit */
+
+/* Ring-panel bola sebagai piringan 3D yang mengorbit */
 .vb-ring {
   position: absolute;
   inset: 0;
@@ -193,7 +195,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   to   { transform: rotate3d(1, 1, 0, 360deg); border-top-color: #facc15; }
 }
 
-/* bola terbang saat transisi — lempar ke gawang kanan-atas dengan spin */
+/* Bola terbang saat transisi — lempar ke gawang kanan-atas dengan spin */
 .volleyball.fly {
   animation: vbFly 0.95s cubic-bezier(0.45, 0, 0.15, 1) forwards;
 }
@@ -202,14 +204,16 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   100% { transform: translate(85vw, -85vh) rotateY(900deg) scale(0.15); opacity: 0; }
 }
 
-/* ---------------- SCOREBOARD — glass broadcast chip ---------------- */
+/* ============================================================
+   SCOREBOARD — glass broadcast chip
+   ============================================================ */
 .scoreboard {
   font-size: 11px;
   letter-spacing: 4px;
   color: var(--gray);
   background: var(--panel);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-top-color: rgba(255, 255, 255, 0.22); /* cahaya menyentuh material */
+  border-top-color: rgba(255, 255, 255, 0.22);
   padding: 9px 18px;
   border-radius: 999px;
   margin-bottom: 30px;
@@ -217,7 +221,9 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 }
 .scoreboard b { color: var(--orange); font-size: 13px; font-variant-numeric: tabular-nums; }
 
-/* ---------------- LANDING TEXT — editorial besar ---------------- */
+/* ============================================================
+   LANDING TEXT — editorial besar
+   ============================================================ */
 .landing-title {
   font-weight: 800;
   text-transform: uppercase;
@@ -245,7 +251,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   color: rgba(212, 212, 216, 0.5);
 }
 
-/* staggered reveal — masuk dari kedalaman 3D */
+/* Staggered reveal — masuk dari kedalaman 3D */
 .reveal-1, .reveal-2, .reveal-3, .reveal-4 {
   opacity: 0;
   animation: riseIn 0.9s var(--ease-out-expo) forwards;
@@ -258,7 +264,9 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   to   { opacity: 1; transform: perspective(800px) translate3d(0, 0, 0) rotateX(0deg); }
 }
 
-/* ---------------- BUTTON UTAMA — solid, tegas, tanpa gradient ---------------- */
+/* ============================================================
+   BUTTON UTAMA — solid, tegas, tanpa gradient
+   ============================================================ */
 .btn-main {
   background: var(--orange);
   color: var(--white);
@@ -282,7 +290,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .btn-main:active { transform: translateY(0) scale(0.97); transition-duration: 0.06s; }
 
 /* ============================================================
-   SCENE 2 : REVEAL — kata-kata muncul seperti title-card olahraga
+   SCENE 2 : REVEAL — teks muncul seperti title-card olahraga
    ============================================================ */
 .scene-reveal { flex-direction: column; }
 
@@ -295,7 +303,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .scene-reveal.active [data-step="6"] { animation: riseIn 0.7s var(--ease-out-expo) 3.05s forwards; }
 .scene-reveal.active [data-step="7"] { animation: riseIn 0.7s var(--ease-out-expo) 3.5s forwards; }
 
-/* slam: teks "dismash" dari depan kamera, sedikit overshoot rotasi */
+/* Slam: teks "dismash" dari depan kamera, sedikit overshoot rotasi */
 @keyframes slamIn {
   0%   { opacity: 0; transform: perspective(700px) translateZ(180px) rotateX(-14deg); filter: blur(8px); }
   60%  { opacity: 1; filter: blur(0); }
@@ -325,7 +333,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   line-height: 1;
   color: var(--white);
   margin: 10px 0 6px;
-  -webkit-text-stroke: 2px var(--orange); /* outline jersey-number style */
+  -webkit-text-stroke: 2px var(--orange);
   paint-order: stroke fill;
 }
 .reveal-age {
@@ -335,14 +343,14 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   margin-top: 8px;
 }
 .reveal-date {
-
   font-size: clamp(12px, 2.4vw, 15px);
   font-weight: 500;
-  letter-spacing: 0.3em;  color: var(--gray);
+  letter-spacing: 0.3em;
+  color: var(--gray);
   margin: 14px 0 34px;
 }
 
-/* jersey numbers dekoratif — outline saja, bukan solid pudar */
+/* Jersey numbers dekoratif — outline saja */
 .jersey {
   position: absolute;
   font-weight: 800;
@@ -363,9 +371,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
    ============================================================ */
 .birthday-card {
   position: relative;
-  /* PERF FIX: backdrop-filter: blur(22px) di atas bg animasi = biaya render
-     sangat besar (kursor kedip, klik lemot). Ganti dengan warna semi-solid:
-     hasil visual mirip glass, tapi GPU jauh lebih ringan. */
+  /* Warna semi-solid — hasil mirip glass, tapi GPU ringan (tanpa backdrop-filter) */
   background: linear-gradient(170deg, rgba(30, 30, 36, 0.93), rgba(13, 13, 16, 0.95));
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-top-color: rgba(255, 255, 255, 0.28);
@@ -377,7 +383,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6);
   scrollbar-width: thin;
 }
-/* kartu masuk: flip 3D dari bawah seperti kartu dibalik tangan */
 .birthday-card { animation: cardDeal 0.85s var(--ease-out-expo) forwards; transform-origin: 50% 120%; }
 @keyframes cardDeal {
   from { opacity: 0; transform: perspective(900px) rotateX(38deg) translateZ(-140px); filter: blur(6px); }
@@ -439,11 +444,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   color: var(--gray);
   margin-bottom: 12px;
 }
-.card-motto {
-  font-weight: 600;
-  color: var(--white) !important;
-  letter-spacing: 0.08em;
-}
+.card-motto { font-weight: 600; color: var(--white) !important; letter-spacing: 0.08em; }
 .card-fire {
   color: var(--orange) !important;
   font-weight: 800;
@@ -451,24 +452,28 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   margin-top: 16px !important;
 }
 
-/* ---------------- GIFT PRANK ---------------- */
+/* ============================================================
+   GIFT PRANK
+   ============================================================ */
 .gift-zone {
   position: relative;
   height: 120px;
-  min-height: 120px;   /* flex column parent: cegah di-shrink jadi 0 */
+  min-height: 120px;
   flex-shrink: 0;
   width: 100%;
   margin-top: 8px;
 }
+
 .gift-zone .hint {
   position: absolute;
   inset: auto 0 0 0;
-  font-size: 11px;  letter-spacing: 0.18em;
+  font-size: 11px;
+  letter-spacing: 0.18em;
   color: rgba(212, 212, 216, 0.45);
 }
 
 .btn-gift {
-  position: absolute;   /* di dalam card, bukan fixed ke viewport */
+  position: absolute;
   left: 50%; bottom: 22px;
   transform: translateX(-50%);
   background: var(--orange);
@@ -489,8 +494,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .btn-gift:hover { background: #fb8b33; }
 .btn-gift.shake { animation: shake 0.35s ease; }
 
-/* Win condition: tombol diam sejenak & beri sinyal bisa diklik.
-   Pakai outline pulse (bukan box-shadow) — jauh lebih murah di GPU. */
+/* Win condition: tombol diam sejenang & beri sinyal bisa diklik */
 .btn-gift.catchable {
   animation: catchPulse 0.9s ease-in-out infinite;
 }
@@ -499,7 +503,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   50%      { outline: 3px solid rgba(250, 204, 21, 0.15); outline-offset: 7px; }
 }
 
-/* desain.md §14 — teks melayang di posisi baru tombol */
+/* Teks melayang di posisi baru tombol (desain.md §14) */
 .float-text {
   position: fixed;
   z-index: 90;
@@ -546,11 +550,13 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   100% { opacity: 0; transform: translateX(-50%) scale(0.96); }
 }
 
-/* ---------------- WIN OVERLAY ---------------- */
+/* ============================================================
+   WIN OVERLAY
+   ============================================================ */
 .win-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.88); /* tanpa backdrop blur — murah */
+  background: rgba(0, 0, 0, 0.88);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -592,7 +598,9 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   font-variant-numeric: tabular-nums;
 }
 
-/* ---------------- AUDIO TOGGLE — glass pill ---------------- */
+/* ============================================================
+   AUDIO TOGGLE — glass pill
+   ============================================================ */
 .btn-audio {
   position: fixed;
   top: 14px; right: 14px;
@@ -600,7 +608,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   width: 42px; height: 42px;
   border-radius: 50%;
   border: 1px solid rgba(255, 255, 255, 0.15);
-  background: rgba(20, 20, 24, 0.85); /* tanpa backdrop blur — murah */
+  background: rgba(20, 20, 24, 0.85);
   color: var(--white);
   font-size: 17px;
   transition: transform 0.12s ease;
@@ -608,7 +616,9 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .btn-audio:hover { transform: scale(1.08); }
 .btn-audio:active { transform: scale(0.94); }
 
-/* ---------------- RESPONSIVE ---------------- */
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
 @media (max-width: 480px) {
   .volleyball { width: 96px; height: 96px; }
   .scoreboard { font-size: 10px; letter-spacing: 3px; }
@@ -647,7 +657,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   50%      { opacity: 0.45; }
 }
 
-/* kartu foto miring ala tempelan scrapbook */
+/* Kartu foto miring ala tempelan scrapbook */
 .letter-card {
   position: relative;
   background: #f4f1ea;
@@ -663,7 +673,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 }
 .letter-card:hover { transform: rotate(-1deg) scale(1.03); }
 
-/* selotip washi di dua sudut atas */
+/* Selotip washi di dua sudut atas */
 .tape {
   position: absolute;
   top: -12px;
@@ -698,7 +708,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   font-weight: 800;
   font-size: 12px;
   letter-spacing: 0.16em;
-  color: #b45309; /* oranye tua di atas kertas krem */
+  color: #b45309;
 }
 .letter-sign {
   font-size: 10px;
@@ -708,7 +718,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
 .btn-letter { margin-top: 2px; }
 
-/* ---- Lightbox: lihat surat full-screen ---- */
+/* Lightbox: lihat surat full-screen */
 .letter-lightbox {
   position: fixed;
   inset: 0;
@@ -724,19 +734,15 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   transition: opacity 0.35s ease, visibility 0.35s;
 }
 .letter-lightbox.show { opacity: 1; visibility: visible; }
-
 .letter-lightbox img {
   max-width: min(92vw, 720px);
   max-height: 80vh;
   border-radius: 8px;
   box-shadow: 0 40px 90px rgba(0, 0, 0, 0.8);
-  /* masuk dengan efek "dilempar ke depan" dari posisi kartu kecil */
   transform: scale(0.6) rotate(3deg);
   transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.letter-lightbox.show img {
-  transform: scale(1) rotate(0deg);
-}
+.letter-lightbox.show img { transform: scale(1) rotate(0deg); }
 .letter-lightbox p {
   font-size: 12px;
   letter-spacing: 0.3em;

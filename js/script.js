@@ -1,6 +1,6 @@
 /* ============================================================
    PUPUT — Birthday Volleyball Surprise · script.js
-   Semua data lokal/dummy. Tanpa framework, tanpa backend.
+   Data lokal/dummy. Tanpa framework, tanpa backend.
    ============================================================ */
 
 "use strict";
@@ -21,14 +21,14 @@ const haikyuuCharacters = [
 
 // Pesan prank berdasarkan jumlah percobaan — PERSIS urutan PRD FR-09
 const prankMessages = {
-  1: "Eh hampir! 😭",
+  1: "Eh hampir! \uD83D\uDE2D",
   2: "Belum boleh!",
-  3: "HAHAHA 😂",
-  4: "Kejar terus 😎",
+  3: "HAHAHA \uD83D\uDE02",
+  4: "Kejar terus \uD83D\uDE0E",
   5: "Hadiah masih jauh...",
-  10: "NYERAH AJA LAH 😂"
+  10: "NYERAH AJA LAH \uD83D\uDE02"
 };
-const WIN_EVERY = 7; // tiap percobaan ke-7 tombol diam → bisa kedapetan (desktop & mobile)
+const WIN_EVERY = 7; // tiap percobaan ke-7 tombol diam -> bisa kedapetan (desktop & mobile)
 
 // ---------------- ELEMEN ----------------
 const sceneLanding = document.getElementById("sceneLanding");
@@ -79,7 +79,7 @@ function spawnParticles(containerId, count) {
   }
 }
 
-// ---------------- SCENE 1 → 2 : TRANSITION ----------------
+// ---------------- SCENE 1 -> 2 : TRANSITION ----------------
 btnOpen.addEventListener("click", () => {
   fireSpeedLines();
   volleyball.classList.add("fly");
@@ -91,7 +91,7 @@ btnOpen.addEventListener("click", () => {
   }, 900);
 });
 
-// ---------------- SCENE 2 → 3 : BIRTHDAY CARD ----------------
+// ---------------- SCENE 2 -> 3 : BIRTHDAY CARD ----------------
 btnToCard.addEventListener("click", () => {
   fireSpeedLines();
   setTimeout(() => {
@@ -153,7 +153,7 @@ function moveGiftButton() {
   attempts++;
 
   // Tombol bergerak RELATIF terhadap gift-zone (di dalam card).
-  // Offset acak terbatas → prank tetap jalan tapi gak lari jauh dari card.
+  // Offset acak terbatas -> prank tetap jalan tapi gak lari jauh dari card.
   const zone = giftZone.getBoundingClientRect();
   const bw = btnGift.offsetWidth, bh = btnGift.offsetHeight;
   const RANGE_X = Math.max(0, (zone.width - bw) / 2 - 6);
@@ -176,11 +176,11 @@ function moveGiftButton() {
   void btnGift.offsetWidth;
   btnGift.classList.add("shake");
 
-  // desain.md §14: teks kecil melayang di posisi BARU tombol, lalu menghilang
+  // desain.md: teks kecil melayang di posisi BARU tombol, lalu menghilang
   const zr = giftZone.getBoundingClientRect();
   spawnFloatText(zr.left + zr.width / 2 + nx, Math.max(zr.top - 6, 10));
 
-  // Win condition: tiap percobaan ke-N tombol diam sejenak → bisa diklik
+  // Win condition: tiap percobaan ke-N tombol diam sejenang -> bisa diklik
   if (attempts % WIN_EVERY === 0) {
     btnGift.classList.add("catchable");
   } else {
@@ -190,11 +190,11 @@ function moveGiftButton() {
   showPrankMessage(attempts);
 }
 
-// Teks melayang singkat ("EH! 😭" / "HAHAHA 😂" / "KECEPIT GAK? 😭")
+// Teks melayang singkat ("EH! \uD83D\uDE2D" / "HAHAHA \uD83D\uDE02" / "KECEPIT GAK? \uD83D\uDE2D")
 function spawnFloatText(x, y) {
   const el = document.createElement("span");
   el.className = "float-text";
-  el.textContent = ["EH! 😭", "HAHAHA 😂", "KECEPIT GAK? 😭"][attempts % 3];
+  el.textContent = ["EH! \uD83D\uDE2D", "HAHAHA \uD83D\uDE02", "KECEPIT GAK? \uD83D\uDE2D"][attempts % 3];
   el.style.left = Math.min(Math.max(x, 40), window.innerWidth - 40) + "px";
   el.style.top = Math.max(y, 10) + "px";
   document.body.appendChild(el);
@@ -203,7 +203,7 @@ function spawnFloatText(x, y) {
 
 function showPrankMessage(count) {
   const msg = prankMessages[count] ||
-    (count % 2 === 0 ? "Masih kejar? 😂" : `Percobaan ke-${count} gagal 😭`);
+    (count % 2 === 0 ? "Masih kejar? \uD83D\uDE02" : `Percobaan ke-${count} gagal \uD83D\uDE2D`);
   prankMsgEl.textContent = msg;
   prankMsgEl.classList.remove("show");
   void prankMsgEl.offsetWidth;
@@ -221,9 +221,7 @@ function resetGiftButton() {
   btnGift.style.transform = "translateX(-50%)";
 }
 
-// Desktop: kabur sekali per hover — JANGAN triple-fire
-// (dulu mouseenter+mouseover+pointerenter jalan barengan = 3x kabur dalam
-// satu hover → tombol lompat-lompat di bawah kursor, terasa lemot & kursor "hilang")
+// Desktop: kabur sekali per hover -> JANGAN triple-fire
 let lastEscape = 0;
 function tryEscape() {
   const now = performance.now();
@@ -234,10 +232,8 @@ function tryEscape() {
 }
 btnGift.addEventListener("pointerenter", tryEscape);
 
-// Mobile: FIX BUG LAMA — touchstart dulu mengkaburkan tombol sebelum click
-// sempat terjadi, sehingga di HP tombol mustahil kedapetan. Sekarang:
-// touchstart tetap mengkaburkan (prank), TAPI saat catchable kita biarkan
-// event click berjalan normal → overlay kemenangan bisa muncul di mobile.
+// Mobile: touchstart tetap mengkaburkan (prank), TAPI saat catchable kita biarkan
+// event click berjalan normal -> overlay kemenangan bisa muncul di mobile.
 btnGift.addEventListener("touchstart", (e) => {
   if (btnGift.classList.contains("catchable")) return; // biarkan click jalan
   e.preventDefault();      // cegah click sintetis supaya tidak dobel kabur
@@ -248,7 +244,7 @@ btnGift.addEventListener("touchstart", (e) => {
 btnGift.addEventListener("click", () => {
   attempts++;
   winAttempts.textContent =
-    `PERCOBAAN KEJAR: ${Math.max(attempts - 1, 0)}× KABUR`;
+    `PERCOBAAN KEJAR: ${Math.max(attempts - 1, 0)}\u00D7 KABUR`;
   winOverlay.classList.add("show");
   burstWinConfetti();
 });
@@ -266,7 +262,7 @@ function burstWinConfetti() {
   // pakai emoji DOM ringan sebentar
   for (let i = 0; i < 24; i++) {
     const el = document.createElement("div");
-    el.textContent = ["🎉", "🏐", "✨", "🔥"][i % 4];
+    el.textContent = ["\uD83C\uDF89", "\uD83C\uDFC0", "\u2728", "\uD83D\uDD25"][i % 4];
     el.style.cssText = `
       position:fixed;left:${Math.random()*100}vw;top:-40px;font-size:${16+Math.random()*22}px;
       z-index:120;pointer-events:none;
@@ -300,7 +296,7 @@ addEventListener("keydown", (e) => { if (e.key === "Escape") closeLetterZoom(); 
 let audioCtx = null, muted = true;
 btnAudio.addEventListener("click", () => {
   muted = !muted;
-  btnAudio.textContent = muted ? "🔇" : "🔊";
+  btnAudio.textContent = muted ? "\uD83D\uDD07" : "\uD83D\uDD0A";
   if (!muted && !audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 });
 
@@ -349,16 +345,14 @@ spawnParticles("particlesLanding", 16);
   }, { passive: true });
 
   (function loop() {
-    cx += (tx - cx) * 0.06; // damping — interruptible feel
+    cx += (tx - cx) * 0.06; // damping -> interruptible feel
     cy += (ty - cy) * 0.06;
-    // Saat scene card aktif, kamera DIKUNCI lurus — stage yang berputar-putar
+    // Saat scene card aktif, kamera DIKUNCI lurus -> stage yang berputar-putar
     // bikin posisi visual tombol geser di bawah kursor (kursor "hilang").
     if (sceneCard.classList.contains("active")) {
       tx = 0; ty = 0;
     }
     // Hanya update DOM kalau perubahannya berarti (>0.01deg).
-    // Dulu loop ini nulis style SETIAP FRAME walau diam → repaint terus,
-    // bikin klik tombol terasa lemot & hover state kacau.
     if (Math.abs(tx - cx) > 0.001 || Math.abs(ty - cy) > 0.001 ||
         !stage.style.transform) {
       stage.style.transform =
@@ -373,5 +367,5 @@ spawnParticles("particlesLanding", 16);
 // Hint kecil di bawah tombol hadiah
 const hint = document.createElement("p");
 hint.className = "hint";
-hint.textContent = "(coba aja klik... kalau bisa 🤭)";
+hint.textContent = "(coba aja klik... kalau bisa \uD83E\uDD2D)";
 giftZone.appendChild(hint);
